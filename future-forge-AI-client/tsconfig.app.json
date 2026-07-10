@@ -20,7 +20,14 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+     /* REQUIRED FOR SHADCN */
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+      /* REQUIRED TO SILENCE TS6 DEPRECATION */
+    "ignoreDeprecations": "6.0"
   },
   "include": ["src"]
 }
