@@ -9,9 +9,9 @@ function Onboarding(){
     const renderOnboardingComponent = () => {
         switch(userRole) {
             case "Aluminus":
-                return <AluminusOnboarding />
+                return <AluminusOnboarding onForge={handleForge} />
             case "Learner":
-                return <LearnerOnboarding />
+                return <LearnerOnboarding onForge={handleForge} />
             case "Aspiring":
                 return <AspiringOnboarding onForge={handleForge} />
             default:

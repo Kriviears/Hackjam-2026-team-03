@@ -1,4 +1,10 @@
-export default function AluminusOnboarding() {
+import type { OnboardingComponentProps } from "./types";
+
+export default function AluminusOnboarding({ onForge }: OnboardingComponentProps) {
+
+    const handleForge = () => {
+      
+    };
   return (
     <>
       <div className="text-center mb-6">
@@ -27,10 +33,10 @@ export default function AluminusOnboarding() {
           <input type="text" placeholder="e.g., Enter the challenge you are facing now." className="w-full bg-matteblack border border-bordergray text-offwhite rounded-md px-3 py-2 focus:outline-none focus:border-royalblue" />
         </div>
 
-        <button type="submit" className="w-full border border-royalblue text-royalblue rounded-md py-2 font-medium hover:bg-royalblue hover:text-black transition">
+        <button type="submit" onClick={handleForge} className="w-full border border-royalblue text-royalblue rounded-md py-2 font-medium hover:bg-royalblue hover:text-black transition">
           Forge my path
         </button>
       </form>
     </>
-  )
+  );
 }

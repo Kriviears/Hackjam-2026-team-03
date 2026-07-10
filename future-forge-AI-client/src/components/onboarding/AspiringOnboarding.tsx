@@ -1,8 +1,9 @@
 import { useState } from "react";
+import type { OnboardingComponentProps } from "./types";
 
 const INTERESTS = ["Web development", "Data", "Cybersecurity", "Devops", "Not sure yet"];
 
-export default function AspiringOnboarding({ onForge }: Props) {
+export default function AspiringOnboarding({ onForge }: OnboardingComponentProps) {
   const [experience, setExperience] = useState("new");
   const [interests, setInterests] = useState<string[]>([]);
   const [triedTraining, setTriedTraining] = useState("no");
