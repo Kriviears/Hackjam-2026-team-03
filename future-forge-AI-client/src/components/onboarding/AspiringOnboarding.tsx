@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { OnboardingComponentProps } from "./types";
+import type { OnboardingComponentProps } from "../../types/types";
 
 const INTERESTS = ["Web development", "Data", "Cybersecurity", "Devops", "Not sure yet"];
 
@@ -41,7 +41,7 @@ export default function AspiringOnboarding({ onForge }: OnboardingComponentProps
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 px-2">
       <div className="text-center mb-6">
         <h1 className="text-2xl font-semibold text-offwhite mb-2">Let's find your starting point</h1>
         <p className="text-silver">A few quick questions so FutureForge can tailor your path.</p>

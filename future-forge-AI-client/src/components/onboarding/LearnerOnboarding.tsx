@@ -1,6 +1,5 @@
 import { useState } from "react";
-import type { OnboardingComponentProps } from "./types";
-
+import type { OnboardingComponentProps } from "../../types/types";
 const PROGRAMS = [
   "AI-Native Software Development (MERN)",
   "Java Full Stack Development",
@@ -17,7 +16,7 @@ export default function LearnerOnboarding({ onForge }: OnboardingComponentProps)
   const [program, setProgram] = useState("");
   const [expectedCompletion, setExpectedCompletion] = useState("");
   const [targetRole, setTargetRole] = useState("");
-  const [skills, setSkills] = useState([]);
+  const [skills, setSkills] = useState<string[]>([]);
   const [skillInput, setSkillInput] = useState("");
   const [progress, setProgress] = useState("");
   const [concern, setConcern] = useState("");
@@ -49,7 +48,7 @@ export default function LearnerOnboarding({ onForge }: OnboardingComponentProps)
   };
 
   return (
-    <>
+    <div className="px-2">
       <div className="text-center mb-6">
         <h1 className="text-2xl font-semibold text-offwhite mb-2">
           Build your career roadmap while still learning
@@ -128,6 +127,6 @@ export default function LearnerOnboarding({ onForge }: OnboardingComponentProps)
           Forge my path
         </button>
       </form>
-    </>
+    </div>
   );
 }
