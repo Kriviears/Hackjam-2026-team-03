@@ -1,7 +1,7 @@
-function futureVision(){
+function FutureVision(){
     return (
     <>Future Vision</>
 );
 }
 
-export default futureVision;
+export default FutureVision;

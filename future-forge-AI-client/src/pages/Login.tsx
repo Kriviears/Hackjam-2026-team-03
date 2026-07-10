@@ -1,7 +1,9 @@
 import { useState } from "react"
-
+import {  useNavigate } from "react-router-dom";
 export default function Login() {
-  const [form, setForm] = useState({ email: "", password: "" })
+  const [form, setForm] = useState({ email: "", password: "" });
+  const navigate = useNavigate();
+    
 
   function handleChange(e) {
     setForm({ ...form, [e.target.name]: e.target.value })
@@ -9,7 +11,15 @@ export default function Login() {
 
   function handleSubmit(e) {
     e.preventDefault()
-    console.log("Login attempt:", form)
+    const roadmapSetup = false; // TODO: fetch the userRoadmap from DB/localStorage.getItem("roadmapSetup");
+
+  if (!roadmapSetup) {
+    // user has no roadmap → go to onboarding
+    navigate("/onboarding")
+  } else {
+    // roadmap exists → go to dashboard
+    navigate("/dashboard")
+  }
   }
 
   return (

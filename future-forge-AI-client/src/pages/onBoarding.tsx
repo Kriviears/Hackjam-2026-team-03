@@ -1,7 +1,7 @@
-function onBoarding(){
+function Onboarding(){
     return (
     <>onBoarding</>
 );
 }
 
-export default onBoarding;
+export default Onboarding;
