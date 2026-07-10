@@ -10,6 +10,8 @@ export default function AspiringOnboarding({ onForge }: Props) {
   const [skills, setSkills] = useState<string[]>([]);
   const [skillInput, setSkillInput] = useState("");
   const [exploringBootcamp, setExploringBootcamp] = useState("no");
+  const [degree, setDegree] = useState("");
+  const [mainGroup, setMainGroup] = useState("");
 
   const toggleInterest = (interest: string) => {
     setInterests((prev) =>
@@ -29,10 +31,11 @@ export default function AspiringOnboarding({ onForge }: Props) {
   const removeSkill = (skill: string) => setSkills(skills.filter((s) => s !== skill));
 
   const handleForge = () => {
+    const basePayload = { experience, degree, mainGroup };
     const payload =
       experience === "new"
-        ? { experience, interests, triedTraining }
-        : { experience, targetRole, skills, exploringBootcamp };
+        ? { ...basePayload, interests, triedTraining }
+        : { ...basePayload, targetRole, skills, exploringBootcamp };
     onForge?.(payload);
   };
 
@@ -60,21 +63,58 @@ export default function AspiringOnboarding({ onForge }: Props) {
           </button>
         </div>
 
+        <div className="space-y-4 mt-6 pt-6 border-t border-bordergray">
+          <div className="space-y-2">
+            <label className="text-silver text-sm">Degree</label>
+            <input
+              value={degree}
+              onChange={(e) => setDegree(e.target.value)}
+              placeholder="e.g. Bachelor's, Master's, Diploma"
+              className="w-full bg-matteblack border border-bordergray text-offwhite rounded-md px-3 py-2 focus:outline-none focus:border-royalblue"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-silver text-sm">Field of Study</label>
+            <input
+              value={mainGroup}
+              onChange={(e) => setMainGroup(e.target.value)}
+              placeholder="e.g. Computer Science, Engineering, Arts"
+              className="w-full bg-matteblack border border-bordergray text-offwhite rounded-md px-3 py-2 focus:outline-none focus:border-royalblue"
+            />
+          </div>
+        </div>
+
         {experience === "new" && (
           <>
-            <label >Which of these sounds interesting?</label>
-            <div>
+            <label className="text-silver text-sm block mt-4">Which of these sounds interesting?</label>
+            <div className="flex flex-wrap gap-2">
               {INTERESTS.map((interest) => (
-                <button key={interest} type="button" onClick={() => toggleInterest(interest)}>
+                <button key={interest} type="button" onClick={() => toggleInterest(interest)}
+                  className={`px-3 py-1 rounded-full text-sm font-medium transition ${
+                    interests.includes(interest)
+                      ? "bg-royalblue text-black"
+                      : "border border-bordergray text-silver hover:border-royalblue"
+                  }`}>
                   {interest}
                 </button>
               ))}
             </div>
 
-            <label >Have you looked into any tech training programs yet?</label>
-            <div >
-              <button type="button" onClick={() => setTriedTraining("yes")}>Yes</button>
-              <button type="button" onClick={() => setTriedTraining("no")}>
+            <label className="text-silver text-sm block mt-4">Have you looked into any tech training programs yet?</label>
+            <div className="flex gap-3">
+              <button type="button" onClick={() => setTriedTraining("yes")}
+                className={`flex-1 px-4 py-2 rounded-md font-medium transition ${
+                  triedTraining === "yes"
+                    ? "bg-royalblue text-black"
+                    : "border border-bordergray text-silver hover:border-royalblue"
+                }`}>Yes</button>
+              <button type="button" onClick={() => setTriedTraining("no")}
+                className={`flex-1 px-4 py-2 rounded-md font-medium transition ${
+                  triedTraining === "no"
+                    ? "bg-royalblue text-black"
+                    : "border border-bordergray text-silver hover:border-royalblue"
+                }`}>
                 No
               </button>
             </div>
@@ -82,7 +122,7 @@ export default function AspiringOnboarding({ onForge }: Props) {
         )}
 
         {experience === "some" && (
-          <div className="space-y-4 mt-6 pt-6 border-t border-bordergray">
+          <div className="space-y-4">
             <div className="space-y-2">
               <label className="text-silver text-sm">Target role</label>
               <input
@@ -123,7 +163,8 @@ export default function AspiringOnboarding({ onForge }: Props) {
                   Yes
                 </button>
                 <button
-                  type="button" onClick={() => setExploringBootcamp("no")} className={`flex-1 px-4 py-2 rounded-md font-medium transition ${exploringBootcamp === "no"
+                  type="button" onClick={() => setExploringBootcamp("no")}
+                   className={`flex-1 px-4 py-2 rounded-md font-medium transition ${exploringBootcamp === "no"
                       ? "bg-royalblue text-black" : "border border-bordergray text-silver hover:border-royalblue" }`} >
                   No
                 </button>
@@ -135,8 +176,8 @@ export default function AspiringOnboarding({ onForge }: Props) {
 
       <button
         onClick={handleForge}
-        className="w-full border border-royalblue text-royalblue rounded-md py-2 font-medium hover:bg-royalblue hover:text-black transition"
-      >
+        className="w-full border border-royalblue text-royalblue rounded-md py-2 font-medium
+         hover:bg-royalblue hover:text-black transition">
         Forge my path
       </button>
     </div>
