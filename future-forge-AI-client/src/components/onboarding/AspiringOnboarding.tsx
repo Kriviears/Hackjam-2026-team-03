@@ -87,7 +87,7 @@ export default function AspiringOnboarding({ onForge }: OnboardingComponentProps
         </div>
 
         {experience === "new" && (
-          <>
+          <div>
             <label className="text-silver text-sm block mt-4">Which of these sounds interesting?</label>
             <div className="flex flex-wrap gap-2">
               {INTERESTS.map((interest) => (
@@ -119,7 +119,7 @@ export default function AspiringOnboarding({ onForge }: OnboardingComponentProps
                 No
               </button>
             </div>
-          </>
+          </div>
         )}
 
         {experience === "some" && (
