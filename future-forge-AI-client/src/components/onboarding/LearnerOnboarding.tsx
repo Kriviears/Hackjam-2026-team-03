@@ -109,7 +109,7 @@ export default function LearnerOnboarding({ onForge }: OnboardingComponentProps)
 
         <div className="space-y-2">
           <label className="text-silver text-sm">
-            Biggest concern right now <span className="text-bordergray">(optional)</span>
+            Challenge <span className="text-bordergray">(optional)</span>
           </label>
           <textarea
             value={concern}
