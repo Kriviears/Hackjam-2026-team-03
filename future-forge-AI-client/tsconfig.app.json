@@ -24,7 +24,12 @@
      /* REQUIRED FOR SHADCN */
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "components/*": ["src/components/*"],
+      "ui/*": ["src/components/ui/*"],
+      "lib/*": ["src/lib/*"],
+      "hooks/*": ["src/hooks/*"],
+      "utils": ["src/lib/utils"]
     },
       /* REQUIRED TO SILENCE TS6 DEPRECATION */
     "ignoreDeprecations": "6.0"
