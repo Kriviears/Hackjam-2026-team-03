@@ -44,7 +44,7 @@ function Onboarding(){
                 <div className="bg-softblack border border-bordergray rounded-xl shadow-md p-6 mx-auto">
                     {status==="intake" && renderOnboardingComponent()}
                     {status==="loading" && <p className="text-gray-400 text-center py-10">Building your roadmap…</p>}
-                    {status==="summary" && <RoadmapSummary roadmap={roadmap} onViewRoadmap={() => setStatus("detail")} />}
+                    {status==="summary" && <RoadmapSummary roadmap={roadmap}  />}
                     {status === "error" && 
                        <div className="text-center py-10">
                             <p className="text-white mb-4">{errorMsg}</p>
@@ -61,5 +61,3 @@ function Onboarding(){
 
 export default Onboarding;
 
-
-// temporarily force the summary state to preview it without hitting the API:
