@@ -17,7 +17,7 @@ const ROADMAP: RoadmapData = {
     {
       phaseNumber: 1,
       title: "Build momentum beyond the curriculum",
-      status: "active",
+      status: "completed",
       oneLineDescription: "Everyone in your cohort has the same capstone. These milestones are what set you apart.",
       milestones: [
         {
@@ -53,7 +53,7 @@ const ROADMAP: RoadmapData = {
           xp: 150,
           done: false,
           type: "task",
-          status: "in-progress",
+          status: "completed",
           help: {
             context:
               "Most learners' only industry contact is their instructor. A handful of informal conversations gives you real context for interviews and starts building a network before you need one.",
@@ -76,7 +76,7 @@ const ROADMAP: RoadmapData = {
           xp: 150,
           done: false,
           type: "task",
-          status: "next-up",
+          status: "completed",
           help: {
             context:
               "Working in an existing, unfamiliar codebase — following someone else's conventions, opening a PR, responding to review comments — is a real job skill that solo capstone projects don't teach.",
@@ -158,7 +158,7 @@ const ROADMAP: RoadmapData = {
     {
       phaseNumber: 2,
       title: "Convert interviews to offers",
-      status: "locked",
+      status: "active",
       oneLineDescription: "Generated once you land your first interview.",
       milestones: [],
     },
@@ -188,8 +188,9 @@ const STATUS_COLOR: Record<MilestoneStatus, { ring: string; dot: string; text: s
 
 export default function RoadmapTimelineHorizontal() {
   const [roadmap, setRoadmap] = useState(ROADMAP);
-  const activePhase = roadmap.phases.find((p) => p.status === "active") ?? roadmap.phases[0];
-  const milestones = activePhase.milestones;
+  const [selectedPhaseNumber, setSelectedPhaseNumber] = useState(1);
+  const selectedPhase = roadmap.phases.find((p) => p.phaseNumber === selectedPhaseNumber) ?? roadmap.phases[0];
+  const milestones = selectedPhase.milestones;
 
   const [selectedId, setSelectedId] = useState(
     milestones.find((m) => m.status === "in-progress")?.id ?? milestones[0]?.id
@@ -202,6 +203,27 @@ export default function RoadmapTimelineHorizontal() {
 
   return (
     <div className="w-full max-w-3xl mx-auto bg-slate-950 rounded-2xl p-6 sm:p-8">
+      {/* Phase selector tabs */}
+      <div className="flex gap-2 mb-8 border-b border-slate-800">
+        {roadmap.phases.map((phase) => (
+          <button
+            key={phase.phaseNumber}
+            onClick={() => setSelectedPhaseNumber(phase.phaseNumber)}
+            disabled={phase.status === "locked"}
+            className={`pb-3 px-4 text-sm font-medium transition ${
+              selectedPhaseNumber === phase.phaseNumber
+                ? "text-sky-300 border-b-2 border-sky-300"
+                : phase.status === "locked"
+                ? "text-slate-600 cursor-not-allowed"
+                : "text-slate-400 hover:text-slate-300"
+            }`}
+          >
+            Phase {phase.phaseNumber}
+            {phase.status === "locked" && " 🔒"}
+          </button>
+        ))}
+      </div>
+
       {/* Readiness snapshot + top gaps -- new sections not in the original component */}
       <div className="mb-8">
         <p className="text-xs uppercase tracking-wide text-sky-300 mb-2">AI readiness snapshot</p>
@@ -221,38 +243,48 @@ export default function RoadmapTimelineHorizontal() {
       {/* Phase context */}
       <div className="mb-6">
         <p className="text-xs uppercase tracking-wide text-slate-500 mb-1">
-          Phase {activePhase.phaseNumber}
+          Phase {selectedPhase.phaseNumber}
         </p>
-        <h1 className="text-white font-semibold text-lg mb-1">{activePhase.title}</h1>
-        <p className="text-slate-400 text-sm">{activePhase.oneLineDescription}</p>
+        <h1 className="text-white font-semibold text-lg mb-1">{selectedPhase.title}</h1>
+        <p className="text-slate-400 text-sm">{selectedPhase.oneLineDescription}</p>
       </div>
 
       {/* Horizontal timeline of milestones within the active phase */}
-      <div className="relative flex items-start justify-between mb-10">
-        <div className="absolute top-4 left-4 right-4 h-0.5 bg-slate-800" />
-        {milestones.map((m) => {
-          const isSelected = m.id === selectedId;
-          const color = STATUS_COLOR[m.status];
-          return (
-            <button
-              key={m.id}
-              onClick={() => setSelectedId(m.id)}
-              className="relative z-10 flex flex-col items-center gap-2 flex-1 group"
-            >
-              <span
-                className={`w-8 h-8 rounded-full flex items-center justify-center ring-2 ${color.ring} ${isSelected ? "scale-110" : ""
-                  } transition-transform bg-slate-950`}
+      {milestones.length === 0 ? (
+        <div className="bg-slate-900 border border-slate-800 rounded-xl p-8 text-center mb-10">
+          <p className="text-slate-400 text-sm">
+            {selectedPhase.status === "locked"
+              ? `🔒 This phase unlocks once you complete Phase ${selectedPhase.phaseNumber - 1}.`
+              : "No milestones yet for this phase."}
+          </p>
+        </div>
+      ) : (
+        <div className="relative flex items-start justify-between mb-10">
+          <div className="absolute top-4 left-4 right-4 h-0.5 bg-slate-800" />
+          {milestones.map((m) => {
+            const isSelected = m.id === selectedId;
+            const color = STATUS_COLOR[m.status];
+            return (
+              <button
+                key={m.id}
+                onClick={() => setSelectedId(m.id)}
+                className="relative z-10 flex flex-col items-center gap-2 flex-1 group"
               >
-                <span className={`w-3 h-3 rounded-full ${color.dot}`} />
-              </span>
-              <span className={`text-xs font-medium text-center leading-tight ${isSelected ? "text-white" : "text-slate-400"}`}>
-                {m.title}
-              </span>
-              <span className={`text-[11px] ${color.text}`}>{STATUS_LABEL[m.status]}</span>
-            </button>
-          );
-        })}
-      </div>
+                <span
+                  className={`w-8 h-8 rounded-full flex items-center justify-center ring-2 ${color.ring} ${isSelected ? "scale-110" : ""
+                    } transition-transform bg-slate-950`}
+                >
+                  <span className={`w-3 h-3 rounded-full ${color.dot}`} />
+                </span>
+                <span className={`text-xs font-medium text-center leading-tight ${isSelected ? "text-white" : "text-slate-400"}`}>
+                  {m.title}
+                </span>
+                <span className={`text-[11px] ${color.text}`}>{STATUS_LABEL[m.status]}</span>
+              </button>
+            );
+          })}
+        </div>
+      )}
 
       {/* Full milestone detail panel -- description, context, steps, resources, xp */}
       {selected && (
