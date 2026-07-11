@@ -1,14 +1,15 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import AspiringOnboarding from "../components/onboarding/AspiringOnboarding"
 import AluminusOnboarding from "../components/onboarding/AluminusOnboarding"
 import LearnerOnboarding from "../components/onboarding/LearnerOnboarding"
-import { sampleRoadmap } from "../data/roadmapSummaryStaticData";
 import RoadmapSummary from "../components/roadmap/RoadmapSummary";
+import { getRoadMap } from "@/services/claudeApi";
 function Onboarding(){
     const [userRole] = useState("Learner");
     const [status, setStatus] = useState("intake") // "intake" | "loading" | "summary" | "detail" | "error"
     const [roadmap, setRoadmap] = useState(null);
     const [errorMsg, setErrorMsg] = useState("");
+    const [formData, setFormData] = useState<Record<string, any> | null>(null);
     
     const renderOnboardingComponent = () => {
         switch(userRole) {
@@ -23,20 +24,35 @@ function Onboarding(){
         }
     }
 
-    const handleForge = () => {
-        setStatus("loading")
-        setErrorMsg("")
-        try {
-            // Temporary: use static sample data instead of calling the API.
-            const data = sampleRoadmap
-            setRoadmap(data)
-            setStatus("summary")
+    const handleForge = (data: Record<string, any>) => {
+        console.log(data);
+        setFormData(data);
+        setStatus("loading");
+        setErrorMsg("");
+    }
+
+    useEffect(()=>{
+       if (status !== "loading") return;
+       const fetchRoadmap = async ()=>{
+            try {
+            if (!formData) {
+                setErrorMsg("Missing form data");
+                setStatus("error");
+                return;
+            }
+
+            const responseData = await getRoadMap(formData);
+            setRoadmap(responseData);
+            setStatus("summary");
 
         } catch (err) {
-            setErrorMsg(err.message)
+            const message = (err as any)?.message ?? String(err);
+            setErrorMsg(message);
             setStatus("error")
         }
-    }
+       }
+       fetchRoadmap();
+    },[status, formData])
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-matteblack">
