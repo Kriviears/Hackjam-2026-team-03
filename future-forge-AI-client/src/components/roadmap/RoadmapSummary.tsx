@@ -1,4 +1,5 @@
 
+import { Link } from "react-router-dom";
 import type { Roadmap } from "../../types/types";
 export default function RoadmapSummary({ roadmap }: { roadmap: Roadmap }) {
   const { targetRole, readinessSnapshot, topGaps } = roadmap;
@@ -24,10 +25,12 @@ export default function RoadmapSummary({ roadmap }: { roadmap: Roadmap }) {
         ))}
       </div>
 
-      <button
-        type="button" className="w-full py-3 px-4 rounded-md bg-royalblue text-black text-sm font-medium hover:bg-royalblue/90 transition" >
-        See your full roadmap
-      </button>
+      <Link to="/roadmap" className="block w-full">
+        <button
+          type="button" className="w-full py-3 px-4 rounded-md bg-royalblue text-black text-sm font-medium hover:bg-royalblue/90 transition" >
+          See your full roadmap
+        </button>
+      </Link>
     </div>
   );
 }
