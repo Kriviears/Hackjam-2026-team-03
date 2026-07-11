@@ -25,7 +25,7 @@ export default function RoadmapSummary({ roadmap }: { roadmap: Roadmap }) {
         ))}
       </div>
 
-      <Link to="/roadmap" className="block w-full">
+      <Link to="/roadmap" state={{ roadmap }} className="block w-full">
         <button
           type="button" className="w-full py-3 px-4 rounded-md bg-royalblue text-black text-sm font-medium hover:bg-royalblue/90 transition" >
           See your full roadmap
