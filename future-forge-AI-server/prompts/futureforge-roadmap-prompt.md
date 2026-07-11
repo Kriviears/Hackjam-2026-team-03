@@ -12,6 +12,20 @@ Everyone's fixed target is the same: **become Employed as [targetRole]**. For `a
 * `challenge`
 * `activePhaseNumber` / `previousPhaseOutcome` (present only when forging phase 2+; shape: `{ phaseTitle, roadmapShape, milestonesCompleted: [string], checkpointResult }`. `checkpointResult` — the person's own words on what actually happened — is the primary evidence; weight it over the milestone title list. `checkpointResult` present = persona transition, evidence carries into a new phase. `checkpointResult` null/absent with `activePhaseNumber` unchanged = a retry — see "On a retry" below.)
 
+# Curriculum reference (Per Scholas MERN program)
+```
+302 Version Control · 326 Web Design Foundations (HTML/CSS, accessibility)
+410 HTML/CSS Review · 411 JavaScript Review · 412 DOM · 413 TypeScript & Advanced JS
+414 HTML/CSS/JS Project · 415 React Fundamentals · 416 Advanced React (hooks, context, routing)
+417 React Project · 418 Auth Principles · 419 Middleware Project
+420 Unifying UIs · 421 Deploying MERN (CI/CD) · 422 MERN Portfolio
+```
+Gate: only applies if `graduationProgram` is this MERN track. Any other `graduationProgram` (or `aspiring`, who hasn't started any program) — ignore this list entirely and reason about skill gaps generically from `currentSkills`/`challenge` instead. Never reference these module numbers for a non-matching program.
+
+When it applies, this list is the primary source for SKILLS LADDER milestones — not a secondary check against `currentSkills`:
+- `current_learner`: identify the next unfinished module in sequence and build the milestone around it, rather than generating a generic skill-improvement milestone. `currentSkills` only helps confirm where they've stopped, not what to teach next.
+- `alumnus`: an alum has completed every module above, so there's no "next module" to assign. Use the list as a checklist instead — if `challenge`/`currentSkills` suggests a covered topic (e.g. Module 418 Auth) is weak or rusty, generate a targeted refresh milestone naming that module, not a "learn X for the first time" milestone. If the gap is something outside this list entirely (a specific tool/framework/requirement from a real posting), treat it as evidence for a genuine gap, not decay.
+
 # Rules
 
 **Phase sequence:**
@@ -41,6 +55,7 @@ Everyone's fixed target is the same: **become Employed as [targetRole]**. For `a
 **Constraints:**
 - Every milestone is a concrete, specific action — never vague advice.
 - `help` must be grounded in THIS person's actual challenge/blocker, not generic advice.
+- Keep `readinessSnapshot`, `topGaps`, and all milestone/help guidance positive, encouraging, and motivating — name the gap honestly, but frame it as a next step, not a deficiency.
 - The phase's final milestone is always `type: "checkpoint"` — a measurable outcome (e.g. "Land your first interview"), not another task. It also carries `outcomeQuestion`: one open question tailored to THIS checkpoint, asked when the person marks it done, to capture what actually happened (e.g. for "Land your first interview" — "How did it happen — cold application or warm intro?"; for "Decide on a tech path" — "Which path did you choose, and what tipped it?"). Max 15 words.
 - Use only the provided input data — never invent facts not supported by it.
 - Respond with ONLY the JSON object shown in # Output below, at the top level — no wrapper key, no markdown fences, no preamble, no pretty-print whitespace.
