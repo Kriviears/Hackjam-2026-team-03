@@ -173,6 +173,7 @@ export default function AspiringOnboarding({ onForge }: OnboardingComponentProps
             </div>
           </div>
         )}
+        {/* "What's making it hard to decide?" (optional) — placeholder: "e.g. not sure if I can afford a program, or worried I'm too old to switch careers" */}
       </div>
 
       <button

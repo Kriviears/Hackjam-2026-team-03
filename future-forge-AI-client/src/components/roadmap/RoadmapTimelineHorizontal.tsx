@@ -1,4 +1,4 @@
-import type { Milestone, RoadmapData } from "@/types/types";
+import type { Milestone, MilestoneStatus, RoadmapData } from "@/types/types";
 import { useState } from "react";
 
 interface RoadmapTimelineProps {
@@ -6,23 +6,19 @@ interface RoadmapTimelineProps {
 }
 
 export default function RoadmapTimelineHorizontal({ roadmap }: RoadmapTimelineProps) {
-console.log(roadmap);
-const STATUS_LABEL: Record<string, string> = {
+
+const STATUS_LABEL: Record<MilestoneStatus, string> = {
   completed: "Completed",
   "in-progress": "In progress",
   "next-up": "Next up",
   goal: "Goal",
-  active: "Active",
-  locked: "Locked",
 };
 
-const STATUS_COLOR: Record<string, { ring: string; dot: string; text: string }> = {
+const STATUS_COLOR: Record<MilestoneStatus, { ring: string; dot: string; text: string }> = {
   completed: { ring: "ring-emerald-400", dot: "bg-emerald-400", text: "text-emerald-300" },
   "in-progress": { ring: "ring-sky-400", dot: "bg-sky-400", text: "text-sky-300" },
   "next-up": { ring: "ring-violet-400", dot: "bg-violet-400", text: "text-violet-300" },
   goal: { ring: "ring-slate-500", dot: "bg-slate-600", text: "text-slate-400" },
-  active: { ring: "ring-sky-400", dot: "bg-sky-400", text: "text-sky-300" },
-  locked: { ring: "ring-slate-600", dot: "bg-slate-600", text: "text-slate-500" },
 };
 
   const [selectedPhaseNumber, setSelectedPhaseNumber] = useState(1);
@@ -100,8 +96,7 @@ const STATUS_COLOR: Record<string, { ring: string; dot: string; text: string }> 
           <div className="absolute top-4 left-4 right-4 h-0.5 bg-slate-800" />
           {milestones.map((m) => {
             const isSelected = m.id === selectedId;
-            const status = m.status || "next-up"; // Default to "next-up" if status is missing
-            const color = STATUS_COLOR[status] || STATUS_COLOR["next-up"]; // Fallback color
+            const color = STATUS_COLOR[m.status];
             return (
               <button
                 key={m.id}
@@ -117,7 +112,7 @@ const STATUS_COLOR: Record<string, { ring: string; dot: string; text: string }> 
                 <span className={`text-xs font-medium text-center leading-tight ${isSelected ? "text-white" : "text-slate-400"}`}>
                   {m.title}
                 </span>
-                <span className={`text-[11px] ${color.text}`}>{STATUS_LABEL[status]}</span>
+                <span className={`text-[11px] ${color.text}`}>{STATUS_LABEL[m.status]}</span>
               </button>
             );
           })}
@@ -129,8 +124,8 @@ const STATUS_COLOR: Record<string, { ring: string; dot: string; text: string }> 
         <div className="bg-slate-900 border border-slate-800 rounded-xl p-5">
           <div className="flex items-center justify-between mb-2">
             <h2 className="text-white font-medium text-base">{selected.title}</h2>
-            <span className={`text-xs px-2.5 py-1 rounded-full bg-slate-800 ${STATUS_COLOR[selected.status || "next-up"]?.text}`}>
-              {STATUS_LABEL[selected.status || "next-up"]}
+            <span className={`text-xs px-2.5 py-1 rounded-full bg-slate-800 ${STATUS_COLOR[selected.status].text}`}>
+              {STATUS_LABEL[selected.status]}
             </span>
           </div>
 

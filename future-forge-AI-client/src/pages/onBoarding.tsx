@@ -6,7 +6,7 @@ import RoadmapSummary from "../components/roadmap/RoadmapSummary";
 import { getRoadMap } from "@/services/claudeApi";
 import type { RoadmapData } from "@/types/types";
 function Onboarding(){
-    const [userRole] = useState("Aluminus");
+    const [userRole] = useState("Learner");
     const [status, setStatus] = useState("intake") // "intake" | "loading" | "summary" | "detail" | "error"
     const [roadmap, setRoadmap] = useState<RoadmapData | null>(null);
     const [errorMsg, setErrorMsg] = useState("");
@@ -14,7 +14,7 @@ function Onboarding(){
     
     const renderOnboardingComponent = () => {
         switch(userRole) {
-            case "Aluminus":
+            case "Alumnus":
                 return <AluminusOnboarding onForge={handleForge} />
             case "Learner":
                 return <LearnerOnboarding onForge={handleForge} />
@@ -91,7 +91,7 @@ function Onboarding(){
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-matteblack">
-            <div className="mx-auto max-w-sm px-4">
+            <div className="mx-auto max-w-2xl px-4">
                 <div className="bg-softblack border border-bordergray rounded-xl shadow-md p-6 mx-auto">
                     {status==="intake" && renderOnboardingComponent()}
                     {status==="loading" && <p className="text-gray-400 text-center py-10">Building your roadmap…</p>}
