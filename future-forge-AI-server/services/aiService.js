@@ -15,7 +15,7 @@ const generateCareerAdvice = async (userProfile) => {
   const response = await client.messages.create({
     model: "claude-sonnet-5",
     max_tokens: 4000,
-
+    thinking: { type: "disabled" },
     system: systemPrompt,
 
     messages: [
@@ -27,9 +27,13 @@ const generateCareerAdvice = async (userProfile) => {
   });
 
  console.log(JSON.stringify(response, null, 2));
-const text = response.content.find(item => item.type === "text").text;
 
-const cleaned = text
+const textBlock = response.content.find(item => item.type === "text");
+if (!textBlock?.text) {
+  throw new Error("No text content in API response");
+}
+
+const cleaned = textBlock.text
   .replace(/```json/g, "")
   .replace(/```/g, "")
   .trim();

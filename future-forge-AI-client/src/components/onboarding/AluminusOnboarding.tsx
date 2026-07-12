@@ -4,6 +4,8 @@ import type { OnboardingComponentProps } from "../../types/types";
 export default function AluminusOnboarding({ onForge }: OnboardingComponentProps) {
   const [targetRole, setTargetRole] = useState("");
   const [skills, setSkills] = useState("");
+  const [projects, setProjects] = useState("");
+  const [certifications, setCertifications] = useState("");
   const [jobSearchStage, setJobSearchStage] = useState("");
   const [challenge, setChallenge] = useState("");
 
@@ -34,7 +36,14 @@ export default function AluminusOnboarding({ onForge }: OnboardingComponentProps
           <label className="text-silver text-sm">Add current skills</label>
           <input type="text" value={skills} onChange={(e) => setSkills(e.target.value)} placeholder="e.g., Python, React" className="w-full bg-matteblack border border-bordergray text-offwhite rounded-md px-3 py-2 focus:outline-none focus:border-royalblue" />
         </div>
-
+        <div className="space-y-2">
+          <label className="text-silver text-sm">Notable projects</label>
+          <input type="text" value={projects} onChange={(e) => setProjects(e.target.value)} placeholder="e.g., Event Manager- full-stack app" className="w-full bg-matteblack border border-bordergray text-offwhite rounded-md px-3 py-2 focus:outline-none focus:border-royalblue" />
+        </div>
+        <div className="space-y-2">
+          <label className="text-silver text-sm">Certifications</label>
+          <input type="text" value={certifications} onChange={(e) => setCertifications(e.target.value)} placeholder="e.g., CompTIA Security+" className="w-full bg-matteblack border border-bordergray text-offwhite rounded-md px-3 py-2 focus:outline-none focus:border-royalblue" />
+        </div>
         <div className="space-y-2">
           <label className="text-silver text-sm">Job Search Stage</label>
           <input type="text" value={jobSearchStage} onChange={(e) => setJobSearchStage(e.target.value)} placeholder="e.g., Active, Planning" className="w-full bg-matteblack border border-bordergray text-offwhite rounded-md px-3 py-2 focus:outline-none focus:border-royalblue" />
@@ -42,7 +51,7 @@ export default function AluminusOnboarding({ onForge }: OnboardingComponentProps
 
         <div className="space-y-2">
           <label className="text-silver text-sm">Challenge</label>
-          <input type="text" value={challenge} onChange={(e) => setChallenge(e.target.value)} placeholder="e.g., Enter the challenge you are facing now." className="w-full bg-matteblack border border-bordergray text-offwhite rounded-md px-3 py-2 focus:outline-none focus:border-royalblue" />
+          <textarea value={challenge} onChange={(e) => setChallenge(e.target.value)} placeholder="e.g., I have applied to many jobs but haven't gotten a single interview call" className="w-full bg-matteblack border border-bordergray text-offwhite rounded-md px-3 py-2 focus:outline-none focus:border-royalblue resize-none h-20" />
         </div>
 
         <button type="submit" className="w-full border border-royalblue text-royalblue rounded-md py-2 font-medium hover:bg-royalblue hover:text-black transition">

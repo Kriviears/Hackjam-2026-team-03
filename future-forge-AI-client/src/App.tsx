@@ -1,7 +1,8 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Login from './pages/Login'
 import Onboarding from './pages/onBoarding'
-import Dashboard from './pages/Dashboard'
+import Dashboard from './pages/dashboard'
+import { Roadmap } from './pages/roadmap'
 
 function App() {
    return (
@@ -13,12 +14,8 @@ function App() {
         <Route path="/onboarding" element={<Onboarding />} />
 
         {/* Dashboard WITH sidebar */}
-        <Route
-          path="/dashboard"
-          element={
-              <Dashboard />
-          }
-        />
+        <Route path="/dashboard" element={<Dashboard /> }/>
+        <Route path="/roadmap" element={<Roadmap /> }/>
       </Routes>
     </BrowserRouter>
   )
