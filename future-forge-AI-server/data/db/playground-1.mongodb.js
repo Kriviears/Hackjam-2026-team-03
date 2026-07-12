@@ -12,7 +12,7 @@
 // Select the database to use.
 use('futureforgeaidb');
 
-db.user.insertOne({
+db.users.insertOne({
   name: "Shanu Priya",
   email: "shanu@gmail.com",
   password:"$2b$10$1EJJmXGTaMkP5EI2nxxaq.p5HpIeKAf8RdoXedpwmCTqFQkYIPlca",
@@ -94,6 +94,21 @@ db.user.insertOne({
     ]
   },
   phaseHistory: [],
+  createdAt: new Date(),
+  updatedAt: new Date()
+});
+
+use('futureforgeaidb');
+db.getCollectionNames()
+db.users.insertOne({
+  name: "Shanu Priya",
+  email: "shanu1@gmail.com",
+  password:"$2b$10$1EJJmXGTaMkP5EI2nxxaq.p5HpIeKAf8RdoXedpwmCTqFQkYIPlca",
+  journeyStage: "current_learner",
+  degree: "Bachelor's",
+  fieldOfStudy: "Computer Science",
+  challenge: "Not sure tech is really for someone without a CS background.",
+  jobSearchStage: "searching",
   createdAt: new Date(),
   updatedAt: new Date()
 });

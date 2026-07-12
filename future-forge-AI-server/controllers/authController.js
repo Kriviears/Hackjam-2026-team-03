@@ -3,9 +3,7 @@ const User = require("../models/User");
 const authenticateUser = async (req, res) => {
     try {
 
-        const user = await User.findOne({ email: req.body.email });
-        console.log(req)
-        console.log(user);
+        const user = await User.findOne({ email: req.body.email }).select("-password");
         if (!user) return res.status(401).json({ error: "Invalid email or password" });
 
         const correctPassword = await user.isCorrectPassword(req.body.password);
@@ -22,7 +20,7 @@ const authenticateUser = async (req, res) => {
             careerPreferences: user.careerPreferences,
         };
 
-        res.status(200).json({ user: userData })
+        res.status(200).json({ user })
     } catch (error) {
         res.status(400).json({
             error: error.message

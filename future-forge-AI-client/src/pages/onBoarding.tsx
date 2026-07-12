@@ -3,10 +3,10 @@ import AspiringOnboarding from "../components/onboarding/AspiringOnboarding"
 import AluminusOnboarding from "../components/onboarding/AluminusOnboarding"
 import LearnerOnboarding from "../components/onboarding/LearnerOnboarding"
 import RoadmapSummary from "../components/roadmap/RoadmapSummary";
-import { getRoadMap } from "@/services/claudeApi";
+import { getRoadMap } from "@/services/service";
 import type { RoadmapData } from "@/types/types";
 function Onboarding(){
-    const [userRole] = useState("Learner");
+    const [userRole] = useState("current_learner");
     const [status, setStatus] = useState("intake") // "intake" | "loading" | "summary" | "detail" | "error"
     const [roadmap, setRoadmap] = useState<RoadmapData | null>(null);
     const [errorMsg, setErrorMsg] = useState("");
@@ -14,11 +14,11 @@ function Onboarding(){
     
     const renderOnboardingComponent = () => {
         switch(userRole) {
-            case "Alumnus":
+            case "alumnus":
                 return <AluminusOnboarding onForge={handleForge} />
-            case "Learner":
+            case "current_learner":
                 return <LearnerOnboarding onForge={handleForge} />
-            case "Aspiring":
+            case "aspiring":
                 return <AspiringOnboarding onForge={handleForge} />
             default:
                 return null
