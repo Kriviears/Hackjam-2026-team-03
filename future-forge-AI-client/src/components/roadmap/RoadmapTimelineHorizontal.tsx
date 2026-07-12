@@ -1,12 +1,15 @@
 import type { Milestone, MilestoneStatus, RoadmapData } from "@/types/types";
 import { useState, useEffect } from "react";
 import { ForgeNextPhaseDialog } from "./ForgeNextPhaseDialog";
+import { getRoadMap } from "@/services/service";
+import { formatPhaseForDisplay } from "@/utils/formatPhaseForDisplay";
 
 interface RoadmapTimelineProps {
   roadmap: RoadmapData;
 }
 
-export default function RoadmapTimelineHorizontal({ roadmap }: RoadmapTimelineProps) {
+export default function RoadmapTimelineHorizontal({ roadmap: initialRoadmap }: RoadmapTimelineProps) {
+  const [roadmap, setRoadmap] = useState<RoadmapData>(initialRoadmap);
 
   const STATUS_LABEL: Record<MilestoneStatus, string> = {
     completed: "Completed",
@@ -58,17 +61,53 @@ export default function RoadmapTimelineHorizontal({ roadmap }: RoadmapTimelinePr
 
   const handleNextPhase = async (data: any) => {
     try {
-      // TODO: API call to generate next phase
-      
-      // Update roadmap with new phase data and move to next phase
+      // Retrieve user data from localStorage
+      const user = localStorage.getItem("user");
+      const userData = user ? JSON.parse(user) : {};
 
-      console.log("Next phase data:", );
+      // Build request payload for next phase
+      const payload = {
+        journeyStage: userData.journeyStage || "current_learner",
+        currentPhaseNumber: selectedPhase.phaseNumber,
+        targetRole: roadmap.targetRole,
+        currentSkills: userData.currentSkills || [],
+        completedMilestoneOutcome: data.outcomeAnswer,
+        currentChallenge: data.challenge,
+        progress: userData.progress || "mid_program"
+      };
+
+      // Call API to generate next phase
+      const responseData = await getRoadMap(payload);
+      const rec = responseData.recommendation || responseData;
+
+      // Format the generated phase for display
+      const nextPhaseData = rec.phases?.[0] || rec.phase;
+      const transformedPhase = formatPhaseForDisplay(nextPhaseData, selectedPhase.phaseNumber + 1);
+
+      console.log("Next phase generated:", transformedPhase);
+
+      // Update roadmap with new phase data
+      if (transformedPhase) {
+        const updatedPhases = roadmap.phases.map(phase =>
+          phase.phaseNumber === selectedPhaseNumber + 1 ? transformedPhase : phase
+        );
+
+        const updatedRoadmap = {
+          ...roadmap,
+          phases: updatedPhases
+        };
+
+        setRoadmap(updatedRoadmap);
+
+        // Save updated roadmap to localStorage
+        localStorage.setItem("roadmap", JSON.stringify(updatedRoadmap));
+      }
+
+      // Save updated challenge to localStorage
+      localStorage.setItem("userChallenge", data.challenge);
+
       setShowCelebration(false);
-
-      // Move to next phase
       setSelectedPhaseNumber(selectedPhaseNumber + 1);
-
-      // Reset completed steps for new phase
       setCompletedSteps({});
     } catch (error) {
       console.error("Error generating next phase:", error);

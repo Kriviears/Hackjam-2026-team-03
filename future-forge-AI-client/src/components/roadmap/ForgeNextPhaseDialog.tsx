@@ -3,10 +3,24 @@ import { useEffect, useRef, useState } from "react";
 export function ForgeNextPhaseDialog({ open, currentPhase, existingChallenge, onSubmit }) {
   const [outcomeAnswer, setOutcomeAnswer] = useState("");
   const [challenge, setChallenge] = useState(existingChallenge);
+  const [userName, setUserName] = useState("");
   const dialogRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
     if (open) {
+      // Retrieve user data from localStorage
+      const user = localStorage.getItem("user");
+      if (user) {
+        const userData = JSON.parse(user);
+        setUserName(userData.firstName || userData.name || userData.email);
+      }
+
+      // Retrieve challenge from localStorage
+      const storedChallenge = localStorage.getItem("userChallenge");
+      if (storedChallenge) {
+        setChallenge(storedChallenge);
+      }
+
       dialogRef.current?.showModal();
     } else {
       dialogRef.current?.close();
@@ -30,6 +44,11 @@ export function ForgeNextPhaseDialog({ open, currentPhase, existingChallenge, on
       </div>
 
       <div className="p-6 space-y-4">
+        {userName && (
+          <p className="text-sky-300 text-sm bg-slate-950 rounded p-2">
+            Welcome back, <span className="font-semibold">{userName}</span>! 👋
+          </p>
+        )}
         <p className="text-slate-300 font-medium">How did this milestone go?</p>
 
         <textarea value={outcomeAnswer} onChange={(e) => setOutcomeAnswer(e.target.value)}  placeholder="Tell us about your experience..."

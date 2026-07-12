@@ -4,6 +4,7 @@ import AluminusOnboarding from "../components/onboarding/AluminusOnboarding"
 import LearnerOnboarding from "../components/onboarding/LearnerOnboarding"
 import RoadmapSummary from "../components/roadmap/RoadmapSummary";
 import { getRoadMap } from "@/services/service";
+import { formatPhaseForDisplay } from "@/utils/formatPhaseForDisplay";
 import type { RoadmapData } from "@/types/types";
 function Onboarding(){
     const [userRole] = useState("current_learner");
@@ -43,28 +44,11 @@ function Onboarding(){
             }
 
             const responseData = await getRoadMap(formData);
-            // Transform API response to match component format
             const rec = responseData.recommendation || responseData;
 
-            // Transform the first phase's milestones to add status field and fix steps structure
+            // Format the first phase for display
             const firstPhase = rec.phases?.[0] || rec.phase;
-            const transformedPhase = firstPhase ? {
-              ...firstPhase,
-              status: "active",
-              milestones: (firstPhase.milestones || []).map((m: any, index: number) => ({
-                ...m,
-                status: m.done ? "completed" : index === 0 ? "in-progress" : "next-up",
-                help: {
-                  ...m.help,
-                  steps: (m.help?.steps || []).map((step: string | any, stepIndex: number) =>
-                    typeof step === "string"
-                      ? { id: `${m.id}-s${stepIndex + 1}`, label: step, done: false }
-                      : step
-                  ),
-                  resources: m.help?.resources || [],
-                },
-              })),
-            } : null;
+            const transformedPhase = formatPhaseForDisplay(firstPhase);
 
             const transformedRoadmap = {
               targetRole: rec.targetRole,
