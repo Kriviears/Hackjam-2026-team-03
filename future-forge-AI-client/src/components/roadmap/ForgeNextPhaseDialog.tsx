@@ -35,7 +35,8 @@ export function ForgeNextPhaseDialog({ open, currentPhase, existingChallenge, on
         <textarea value={outcomeAnswer} onChange={(e) => setOutcomeAnswer(e.target.value)}  placeholder="Tell us about your experience..."
           className="w-full h-24 bg-slate-950 border border-slate-700 rounded-lg p-3 text-slate-200 placeholder-slate-500 focus:outline-none focus:border-sky-400 resize-none"/>
 
-        <p className="text-slate-300 font-medium">Any new challenges ahead?</p>
+        <p className="text-slate-300 font-medium">What's your challenge now? (optional)</p>
+        <p>Edit if anything's changed, or leave as is.</p>
 
         <textarea value={challenge} onChange={(e) => setChallenge(e.target.value)} placeholder={existingChallenge || "What's your next challenge?"}
           className="w-full h-24 bg-slate-950 border border-slate-700 rounded-lg p-3 text-slate-200 placeholder-slate-500 focus:outline-none focus:border-sky-400 resize-none" />
