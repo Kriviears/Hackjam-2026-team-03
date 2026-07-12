@@ -10,3 +10,10 @@ export async function login(data){
     console.log(response);
     return response.data;
 }
+
+
+export async function getOpportunities(role){
+    const res = await axiosInstance.get(`/opportunities?role=${role}`);
+    console.log(res);
+    return res.data;
+}

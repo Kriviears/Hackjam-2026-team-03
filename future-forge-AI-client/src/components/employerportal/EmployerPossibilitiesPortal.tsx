@@ -1,6 +1,7 @@
+import { getOpportunities } from "@/services/service";
 import { useState, useEffect } from "react";
 
-export default function EmployerPossibilitiesPortal({ defaultRole = "" }) {
+export default function EmployerPossibilitiesPortal({ defaultRole = "Software Engineer" }) {
   const [role, setRole] = useState(defaultRole);
   const [location, setLocation] = useState("");
   const [jobs, setJobs] = useState([]);
@@ -17,13 +18,7 @@ export default function EmployerPossibilitiesPortal({ defaultRole = "" }) {
     setSearched(true);
 
     try {
-      const params = new URLSearchParams({ role });
-      if (location.trim()) params.append("location", location);
-
-      const res = await fetch(`/api/opportunities?${params}`);
-      if (!res.ok) throw new Error("Failed to load jobs");
-
-      const data = await res.json();
+      const data = await getOpportunities(role);
       setJobs(data);
     } catch (err) {
       setError(err.message);

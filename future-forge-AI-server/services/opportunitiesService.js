@@ -1,4 +1,4 @@
-const perscholasAlumns = require("../seed/perscholasAlumns");
+const perscholasAlumns = require("../data/perscholasAlumns");
 
 const ADZUNA_APP_ID = process.env.ADZUNA_APP_ID;
 const ADZUNA_APP_KEY = process.env.ADZUNA_APP_KEY;
@@ -17,6 +17,7 @@ const alumniByCompany = perscholasAlumns.reduce((acc, a) => {
 //1. fetch the live job oppertunities using Azuna APIs,
 //2. Iterate each jobs, find the matching alumuns who work there.
 async function getOpportunities(role, location = "United States") {
+  console.log("Get Oppertunities")
   const url = `https://api.adzuna.com/v1/api/jobs/us/search/1?app_id=${ADZUNA_APP_ID}&app_key=${ADZUNA_APP_KEY}&what=${encodeURIComponent(
     role
   )}&where=${encodeURIComponent(location)}&results_per_page=${RESULTS_PER_PAGE}`;
@@ -25,8 +26,7 @@ async function getOpportunities(role, location = "United States") {
   if (!res.ok) throw new Error(`Adzuna request failed: ${res.status}`);
 
   const data = await res.json();
-
-  return (data.results || []).map((job) => {
+ return (data.results || []).map((job) => {
     const company = job.company?.display_name;
     const mentors = company ? alumniByCompany[company] || null : null;
 
