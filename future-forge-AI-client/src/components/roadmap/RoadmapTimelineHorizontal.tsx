@@ -1,5 +1,5 @@
 import type { Milestone, MilestoneStatus, RoadmapData } from "@/types/types";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface RoadmapTimelineProps {
   roadmap: RoadmapData;
@@ -24,15 +24,34 @@ const STATUS_COLOR: Record<MilestoneStatus, { ring: string; dot: string; text: s
   const [selectedPhaseNumber, setSelectedPhaseNumber] = useState(1);
   const selectedPhase = roadmap.phases.find((p) => p.phaseNumber === selectedPhaseNumber) ?? roadmap.phases[0];
   const milestones = selectedPhase.milestones;
+  const [completedSteps, setCompletedSteps] = useState<Record<string, boolean>>({});
 
   const [selectedId, setSelectedId] = useState(
     milestones.find((m) => m.status === "in-progress")?.id ?? milestones[0]?.id
   );
   const selected: Milestone | undefined = milestones.find((m) => m.id === selectedId);
 
-  const toggleStep = (milestoneId: string, stepId: string) => {
-   
-  };
+  const toggleStep = (stepId: string) => {
+  setCompletedSteps((prev) => ({
+    ...prev,
+    [stepId]: !prev[stepId]  // example stepId - "m1-s1"
+  }));
+};
+
+  useEffect(() => {
+    if (selected && selected.help.steps.length > 0) {
+      const allStepsCompleted = selected.help.steps.every((step) => completedSteps[step.id]);
+
+      if (allStepsCompleted && selected.status !== "completed") {
+        selected.status = "completed";
+
+        const nextMilestone = milestones.find((m) => m.status === "in-progress");
+        if (nextMilestone) {
+          setSelectedId(nextMilestone.id);
+        }
+      }
+    }
+  }, [completedSteps, selected, milestones]);
 
   return (
     <div className="w-full max-w-3xl mx-auto bg-slate-950 rounded-2xl p-6 sm:p-8">
@@ -151,8 +170,8 @@ const STATUS_COLOR: Record<MilestoneStatus, { ring: string; dot: string; text: s
                   <label className="flex items-center gap-3 cursor-pointer">
                     <input
                       type="checkbox"
-                      checked={step.done}
-                      onChange={() => toggleStep(selected.id, step.id)}
+                      checked={completedSteps[step.id] || false}
+                      onChange={() => toggleStep(step.id)}
                       className="w-4 h-4 rounded accent-sky-400"
                     />
                     <span className={`text-sm ${step.done ? "text-slate-500 line-through" : "text-slate-200"}`}>
