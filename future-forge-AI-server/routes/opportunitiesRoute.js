@@ -13,10 +13,7 @@ router.get("/techGroups", async (req, res) => {
     try {
         const result = await getTechGroups();
         console.log(result);
-        res.json({
-            count: result.places?.length || 0,
-            places: result.places || []
-        });
+        res.json(result.places);
     } catch (error) {
         res.status(500).json({
             error: "Failed to fetch places",

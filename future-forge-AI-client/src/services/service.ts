@@ -17,3 +17,10 @@ export async function getOpportunities(role){
     console.log(res);
     return res.data;
 }
+
+
+export async function getLocalTechGroups(){
+    const res = await axiosInstance.get(`/techGroups`);
+    console.log(res);
+    return res.data;
+}
