@@ -11,6 +11,7 @@ const mentorRoutes = require("./routes/mentorRoutes");
 const companyRoutes = require("./routes/companyRoutes");
 const whatIfRoutes = require("./routes/whatIfRoutes");
 const aiRoutes = require("./routes/aiRoutes");
+const authRoutes = require("./routes/authRoutes");
 
 const app = express();
 
@@ -31,6 +32,7 @@ app.use("/api", mentorRoutes);
 app.use("/api", companyRoutes);
 app.use("/api", whatIfRoutes);
 app.use("/api", aiRoutes);
+app.use("/api", authRoutes);
 
 // Test Route
 app.get("/", (req, res) => {
