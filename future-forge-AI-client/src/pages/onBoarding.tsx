@@ -95,7 +95,7 @@ function Onboarding(){
                 <div className="bg-softblack border border-bordergray rounded-xl shadow-md p-6 mx-auto">
                     {status==="intake" && renderOnboardingComponent()}
                     {status==="loading" && <p className="text-gray-400 text-center py-10">Building your roadmap…</p>}
-                    {status==="summary" && roadmap && <RoadmapSummary roadmap={roadmap as any}  />}
+                    {status==="summary" && roadmap && <RoadmapSummary roadmap={roadmap as any} onBack={() => setStatus("intake") } />}
                     {status === "error" && 
                        <div className="text-center py-10">
                             <p className="text-white mb-4">{errorMsg}</p>

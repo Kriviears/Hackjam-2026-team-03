@@ -4,8 +4,8 @@ import type { OnboardingComponentProps } from "../../types/types";
 export default function AluminusOnboarding({ onForge }: OnboardingComponentProps) {
   const [targetRole, setTargetRole] = useState("");
   const [skills, setSkills] = useState("");
-   const [projects, setProjects] = useState("");
-    const [certifications, setCertifications] = useState("");
+  const [projects, setProjects] = useState("");
+  const [certifications, setCertifications] = useState("");
   const [jobSearchStage, setJobSearchStage] = useState("");
   const [challenge, setChallenge] = useState("");
 

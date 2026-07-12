@@ -1,7 +1,7 @@
 
 import { Link } from "react-router-dom";
 import type { Roadmap } from "../../types/types";
-export default function RoadmapSummary({ roadmap }: { roadmap: Roadmap }) {
+export default function RoadmapSummary({ roadmap,  onBack }: { roadmap: Roadmap; onBack?: () => void  }) {
   const { targetRole, readinessSnapshot, topGaps } = roadmap;
 
   return (
@@ -13,7 +13,7 @@ export default function RoadmapSummary({ roadmap }: { roadmap: Roadmap }) {
         <p className="text-offwhite text-sm leading-relaxed">{readinessSnapshot}</p>
       </div>
 
-      <p className="text-silver text-xs font-semibold uppercase tracking-wider mb-4">Top 3 things to fix first</p>
+      <p className="text-silver text-xs font-semibold uppercase tracking-wider mb-4">Suggested Steps</p>
       <div className="space-y-3 mb-8">
         {topGaps.map((gap, i) => (
           <div key={i} className="flex gap-3 items-start">
@@ -24,13 +24,20 @@ export default function RoadmapSummary({ roadmap }: { roadmap: Roadmap }) {
           </div>
         ))}
       </div>
+      <div>
+        <Link to="/onboarding" className="flex-1">
+          <button  onClick={onBack} className="w-full py-3 px-4 rounded-md bg-matteblack border border-bordergray text-offwhite text-sm font-medium hover:bg-softblack transition">
+            Previous
+          </button>
+        </Link>
 
-      <Link to="/roadmap" state={{ roadmap }} className="block w-full">
-        <button
-          type="button" className="w-full py-3 px-4 rounded-md bg-royalblue text-black text-sm font-medium hover:bg-royalblue/90 transition" >
-          See your full roadmap
-        </button>
-      </Link>
+        <Link to="/roadmap" state={{ roadmap }} className="block w-full">
+          <button
+            type="button" className="w-full py-3 px-4 rounded-md bg-royalblue text-black text-sm font-medium hover:bg-royalblue/90 transition" >
+            See your full roadmap
+          </button>
+        </Link>
+      </div>
     </div>
   );
 }
