@@ -1,6 +1,9 @@
+import EmployerPossibilitiesPortal from "@/components/employerportal/EmployerPossibilitiesPortal";
+
 function Portal(){
     return (
-    <>Posibilities Portal</>
+    <>Posibilities Portal
+    <EmployerPossibilitiesPortal/></>
 );
 }
 
