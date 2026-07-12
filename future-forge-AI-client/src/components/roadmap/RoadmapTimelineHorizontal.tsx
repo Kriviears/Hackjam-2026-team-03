@@ -1,5 +1,6 @@
 import type { Milestone, MilestoneStatus, RoadmapData } from "@/types/types";
 import { useState, useEffect } from "react";
+import { ForgeNextPhaseDialog } from "./ForgeNextPhaseDialog";
 
 interface RoadmapTimelineProps {
   roadmap: RoadmapData;
@@ -7,51 +8,73 @@ interface RoadmapTimelineProps {
 
 export default function RoadmapTimelineHorizontal({ roadmap }: RoadmapTimelineProps) {
 
-const STATUS_LABEL: Record<MilestoneStatus, string> = {
-  completed: "Completed",
-  "in-progress": "In progress",
-  "next-up": "Next up",
-  goal: "Goal",
-};
+  const STATUS_LABEL: Record<MilestoneStatus, string> = {
+    completed: "Completed",
+    "in-progress": "In progress",
+    "next-up": "Next up",
+    goal: "Goal",
+  };
 
-const STATUS_COLOR: Record<MilestoneStatus, { ring: string; dot: string; text: string }> = {
-  completed: { ring: "ring-emerald-400", dot: "bg-emerald-400", text: "text-emerald-300" },
-  "in-progress": { ring: "ring-sky-400", dot: "bg-sky-400", text: "text-sky-300" },
-  "next-up": { ring: "ring-violet-400", dot: "bg-violet-400", text: "text-violet-300" },
-  goal: { ring: "ring-slate-500", dot: "bg-slate-600", text: "text-slate-400" },
-};
+  const STATUS_COLOR: Record<MilestoneStatus, { ring: string; dot: string; text: string }> = {
+    completed: { ring: "ring-emerald-400", dot: "bg-emerald-400", text: "text-emerald-300" },
+    "in-progress": { ring: "ring-sky-400", dot: "bg-sky-400", text: "text-sky-300" },
+    "next-up": { ring: "ring-violet-400", dot: "bg-violet-400", text: "text-violet-300" },
+    goal: { ring: "ring-slate-500", dot: "bg-slate-600", text: "text-slate-400" },
+  };
 
   const [selectedPhaseNumber, setSelectedPhaseNumber] = useState(1);
   const selectedPhase = roadmap.phases.find((p) => p.phaseNumber === selectedPhaseNumber) ?? roadmap.phases[0];
   const milestones = selectedPhase.milestones;
   const [completedSteps, setCompletedSteps] = useState<Record<string, boolean>>({});
-
+  const [showCelebration, setShowCelebration] = useState(false);
   const [selectedId, setSelectedId] = useState(
     milestones.find((m) => m.status === "in-progress")?.id ?? milestones[0]?.id
   );
   const selected: Milestone | undefined = milestones.find((m) => m.id === selectedId);
 
   const toggleStep = (stepId: string) => {
-  setCompletedSteps((prev) => ({
-    ...prev,
-    [stepId]: !prev[stepId]  // example stepId - "m1-s1"
-  }));
-};
+    setCompletedSteps((prev) => ({
+      ...prev,
+      [stepId]: !prev[stepId]  // example stepId - "m1-s1"
+    }));
+  };
 
   useEffect(() => {
     if (selected && selected.help.steps.length > 0) {
       const allStepsCompleted = selected.help.steps.every((step) => completedSteps[step.id]);
 
       if (allStepsCompleted && selected.status !== "completed") {
-        selected.status = "completed";
+        selected.status = "completed";//all milestone complete - phase complete
 
+        // Move to next milestone automatically
         const nextMilestone = milestones.find((m) => m.status === "in-progress");
         if (nextMilestone) {
           setSelectedId(nextMilestone.id);
         }
+        // Dialog only opens when user clicks "Celebrate" button
       }
     }
   }, [completedSteps, selected, milestones]);
+
+  const handleNextPhase = async (data: any) => {
+    try {
+      // TODO: API call to generate next phase
+      
+      // Update roadmap with new phase data and move to next phase
+
+      console.log("Next phase data:", );
+      setShowCelebration(false);
+
+      // Move to next phase
+      setSelectedPhaseNumber(selectedPhaseNumber + 1);
+
+      // Reset completed steps for new phase
+      setCompletedSteps({});
+    } catch (error) {
+      console.error("Error generating next phase:", error);
+      setShowCelebration(false);
+    }
+  }
 
   return (
     <div className="w-full max-w-3xl mx-auto bg-slate-950 rounded-2xl p-6 sm:p-8">
@@ -62,13 +85,12 @@ const STATUS_COLOR: Record<MilestoneStatus, { ring: string; dot: string; text: s
             key={phase.phaseNumber}
             onClick={() => setSelectedPhaseNumber(phase.phaseNumber)}
             disabled={phase.status === "locked"}
-            className={`pb-3 px-4 text-sm font-medium transition ${
-              selectedPhaseNumber === phase.phaseNumber
-                ? "text-sky-300 border-b-2 border-sky-300"
-                : phase.status === "locked"
+            className={`pb-3 px-4 text-sm font-medium transition ${selectedPhaseNumber === phase.phaseNumber
+              ? "text-sky-300 border-b-2 border-sky-300"
+              : phase.status === "locked"
                 ? "text-slate-600 cursor-not-allowed"
                 : "text-slate-400 hover:text-slate-300"
-            }`}
+              }`}
           >
             Phase {phase.phaseNumber}
             {phase.status === "locked" && " 🔒"}
@@ -200,6 +222,20 @@ const STATUS_COLOR: Record<MilestoneStatus, { ring: string; dot: string; text: s
               </ul>
             </div>
           )}
+          {selected.type === "checkpoint" && (
+            <button onClick={() => setShowCelebration(true)} title="Generate your next phase based on this checkpoint"
+              className="mt-4 w-full py-3 px-4 rounded-lg bg-gradient-to-r from-violet-600 to-violet-500 hover:from-violet-500 hover:to-violet-400 text-white font-medium transition"
+            >
+              🎉 Celebrate Checkpoint
+            </button>
+          )}
+          <ForgeNextPhaseDialog
+            open={showCelebration}
+            currentPhase={selectedPhase}
+            existingChallenge=""
+            onSubmit={(data:any) => handleNextPhase(data)}
+          />
+
         </div>
       )}
     </div>
