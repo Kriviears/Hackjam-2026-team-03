@@ -3,6 +3,7 @@ import Login from './pages/Login'
 import Onboarding from './pages/onBoarding'
 import Dashboard from './pages/dashboard'
 import { Roadmap } from './pages/roadmap'
+import Portal from './pages/portal'
 
 function App() {
    return (
@@ -16,6 +17,7 @@ function App() {
         {/* Dashboard WITH sidebar */}
         <Route path="/dashboard" element={<Dashboard /> }/>
         <Route path="/roadmap" element={<Roadmap /> }/>
+        <Route path="/portal" element={<Portal/>}></Route>
       </Routes>
     </BrowserRouter>
   )
