@@ -75,6 +75,7 @@ export default function RoadmapTimelineHorizontal({ roadmap: initialRoadmap }: R
 
       // Build request payload for next phase
       const payload = {
+        userId: data.userId || userData.id || userData._id,
         journeyStage: userData.journeyStage || "current_learner",
         currentPhaseNumber: selectedPhase.phaseNumber,
         targetRole: roadmap.targetRole,

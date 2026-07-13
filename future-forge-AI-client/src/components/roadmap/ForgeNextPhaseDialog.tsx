@@ -28,7 +28,14 @@ export function ForgeNextPhaseDialog({ open, currentPhase, currentMilestone, isJ
   }, [open]);
 
   const handleSubmit = () => {
-    onSubmit({ outcomeAnswer, challenge });
+    const user = localStorage.getItem("user");
+    const userData = user ? JSON.parse(user) : {};
+    const payload = {
+      userId: userData.id || userData._id,
+      outcomeAnswer,
+      challenge
+    };
+    onSubmit(payload);
     setOutcomeAnswer("");
     setChallenge(existingChallenge);
     dialogRef.current?.close();

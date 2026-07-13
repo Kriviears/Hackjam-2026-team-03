@@ -2,6 +2,50 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const saltRound = 10;
 
+const milestoneSchema = new mongoose.Schema(
+  {
+    id: String,
+    title: String,
+    description: String,
+    category: String,
+    done: { type: Boolean, default: false },
+    type: { type: String, enum: ["task", "checkpoint"] },
+    help: {
+      context: String,
+      steps: [String],
+      resources: [{ label: String, url: String, email: String }],
+    },
+    outcomeQuestion: String,
+  },
+  { _id: false }
+);
+
+const phaseSchema = new mongoose.Schema(
+  {
+    phaseNumber: Number,
+    title: String,
+    oneLineDescription: String,
+    roadmapShape: {
+      type: String,
+      enum: ["exploratory", "skills-ladder", "diagnostic-ladder"],
+    },
+    milestones: [milestoneSchema],
+  },
+  { _id: false }
+);
+
+const phaseOutcomeSchema = new mongoose.Schema(
+  {
+    phase: phaseSchema,
+    topGaps: [String],
+    readinessSnapshot: String,
+    milestonesCompleted: [String],
+    checkpointResult: String,
+    completedAt: { type: Date, default: Date.now },
+  },
+  { _id: false }
+);
+
 const userSchema = mongoose.Schema(
   {
     name: { type: String, required: true },
@@ -35,8 +79,8 @@ const userSchema = mongoose.Schema(
  
     // --- Roadmap state ---
     activePhaseNumber: { type: Number, default: 1 },
-    //currentPhase: { type: PhaseSchema }, // latest AI-generated phase (only one active at a time)
-  //  phaseHistory: { type: [PhaseOutcomeSchema], default: [] }, // completed/retried phases
+    currentPhase: phaseSchema, // latest AI-generated phase (only one active at a time)
+    phaseHistory: { type: [phaseOutcomeSchema], default: [] }, // completed/retried phases with outcomes
  
     // Top-level AI output fields (regenerated with each phase, kept for display)
     readinessSnapshot: { type: String },
@@ -56,7 +100,20 @@ userSchema.methods.isCorrectPassword = async function (password) {
         return await bcrypt.compare(password, this.password);
     else
         return true;
-    
+
+}
+
+userSchema.methods.savePhaseOutcome = function (phase, topGaps, readinessSnapshot, milestonesCompleted, checkpointResult) {
+  this.phaseHistory.push({
+    phase,
+    topGaps,
+    readinessSnapshot,
+    milestonesCompleted,
+    checkpointResult,
+    completedAt: new Date(),
+  });
+  this.activePhaseNumber += 1;
+  return this.save();
 }
 
 module.exports = mongoose.model("User", userSchema);

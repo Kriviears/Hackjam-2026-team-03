@@ -28,8 +28,14 @@ function Onboarding(){
     }
 
     const handleForge = (data: Record<string, any>) => {
-        console.log(data);
-        setFormData(data);
+        const user = localStorage.getItem("user");
+        const userData = user ? JSON.parse(user) : {};
+        const payload = {
+            userId: userData.id || userData._id,
+            ...data
+        };
+        console.log(payload);
+        setFormData(payload);
         setStatus("loading");
         setErrorMsg("");
     }

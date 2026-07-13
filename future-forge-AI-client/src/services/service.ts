@@ -24,3 +24,10 @@ export async function getLocalTechGroups(){
     console.log(res);
     return res.data;
 }
+
+export async function getUserRoadmap(userId: string){
+    const response = await axiosInstance.get("/career-path", {
+        params: { userId }
+    });
+    return response.data;
+}

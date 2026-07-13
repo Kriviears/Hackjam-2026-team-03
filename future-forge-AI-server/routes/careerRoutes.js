@@ -1,18 +1,17 @@
 const express = require("express");
 const router = express.Router();
 
-const { 
+const {
     getCareerPath,
-    createCareerPath
+    completePhase
 } = require("../controllers/careerController");
 
 
-// GET existing career path
+// GET complete roadmap (current phase + all past phases)
 router.get("/career-path", getCareerPath);
 
-
-// POST user information and generate career path
-router.post("/career-path", createCareerPath);
+// POST phase completion (saves to history and increments phase)
+router.post("/career-path/complete-phase", completePhase);
 
 
 module.exports = router;
