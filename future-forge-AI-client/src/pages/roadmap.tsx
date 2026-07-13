@@ -2,6 +2,7 @@ import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import RoadmapTimelineHorizontal from "@/components/roadmap/RoadmapTimelineHorizontal";
 import { getUserRoadmap } from "@/services/service";
+import { formatPhaseForDisplay } from "@/utils/formatPhaseForDisplay";
 import type { RoadmapData } from "@/types/types";
 
 export function Roadmap(){
@@ -24,11 +25,17 @@ export function Roadmap(){
                         const backendData = await getUserRoadmap(userId);
 
                         if (backendData?.roadmap) {
+                            const allPhases = backendData.roadmap.currentPhase
+                                ? [backendData.roadmap.currentPhase, ...backendData.roadmap.pastPhases]
+                                : backendData.roadmap.pastPhases || [];
+
+                            const transformedPhases = allPhases
+                                .filter(Boolean)
+                                .map((phase: any, idx: number) => formatPhaseForDisplay(phase, phase.phaseNumber || idx + 1));
+
                             const transformedRoadmap: RoadmapData = {
                                 targetRole: backendData.userProfile?.targetRole || "",
-                                phases: backendData.roadmap.currentPhase
-                                    ? [backendData.roadmap.currentPhase, ...backendData.roadmap.pastPhases]
-                                    : backendData.roadmap.pastPhases || [],
+                                phases: transformedPhases,
                                 goal: backendData.goal || "",
                                 readinessSnapshot: backendData.readinessSnapshot || "",
                                 topGaps: backendData.topGaps || []

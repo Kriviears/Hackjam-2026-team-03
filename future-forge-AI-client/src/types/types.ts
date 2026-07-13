@@ -56,3 +56,7 @@ export interface RoadmapData {
   topGaps: string[];
   phases: Phase[];
 }
+
+export interface Place{
+  
+}

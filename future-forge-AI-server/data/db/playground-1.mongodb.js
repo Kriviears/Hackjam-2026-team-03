@@ -101,13 +101,41 @@ db.users.insertOne({
 use('futureforgeaidb');
 db.getCollectionNames()
 db.users.insertOne({
-  name: "Shanu Priya",
+  name: "Shanu Priya1",
   email: "shanu1@gmail.com",
   password:"$2b$10$1EJJmXGTaMkP5EI2nxxaq.p5HpIeKAf8RdoXedpwmCTqFQkYIPlca",
   journeyStage: "current_learner",
   degree: "Bachelor's",
   fieldOfStudy: "Computer Science",
   challenge: "Not sure tech is really for someone without a CS background.",
+  jobSearchStage: "searching",
+  createdAt: new Date(),
+  updatedAt: new Date()
+});
+
+db.getCollectionNames()
+db.users.insertOne({
+  name: "Shanu Priya1",
+  email: "shanu12@gmail.com",
+  password:"$2b$10$1EJJmXGTaMkP5EI2nxxaq.p5HpIeKAf8RdoXedpwmCTqFQkYIPlca",
+  journeyStage: "current_learner",
+  degree: "Bachelor's",
+  fieldOfStudy: "Computer Science",
+  challenge: "",
+  jobSearchStage: "searching",
+  createdAt: new Date(),
+  updatedAt: new Date()
+});
+
+use('futureforgeaidb');
+db.users.insertOne({
+  name: "Wilfried Bako",
+  email: "bakowilfriedmarcel@gmail.com",
+  password:"$2b$10$1EJJmXGTaMkP5EI2nxxaq.p5HpIeKAf8RdoXedpwmCTqFQkYIPlca",
+  journeyStage: "alumnus",
+  degree: "Master's",
+  fieldOfStudy: "Chemical and Process Engineering",
+  challenge: "I'm applying for Cloud and Platform Engineering roles but getting very few interview opportunities.",
   jobSearchStage: "searching",
   createdAt: new Date(),
   updatedAt: new Date()

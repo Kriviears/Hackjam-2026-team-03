@@ -52,7 +52,10 @@ export default function RoadmapTimelineHorizontal({ roadmap: initialRoadmap }: R
 
   useEffect(() => {
     if (selected && selected.help.steps.length > 0) {
-      const allStepsCompleted = selected.help.steps.every((step) => completedSteps[step.id]);
+      const allStepsCompleted = selected.help.steps.every((_, idx) => {
+        const stepId = `${selected.id}-step-${idx}`;
+        return completedSteps[stepId];
+      });
 
       if (allStepsCompleted && selected.status !== "completed") {
         selected.status = "completed";//all milestone complete - phase complete
@@ -98,14 +101,21 @@ export default function RoadmapTimelineHorizontal({ roadmap: initialRoadmap }: R
       // Update roadmap with new phase data
       if (transformedPhase) {
         const jobStatus = rec.jobStatus || "searching";
+        const newPhaseNumber = selectedPhaseNumber + 1;
+
         let updatedPhases = roadmap.phases.map(phase =>
-          phase.phaseNumber === selectedPhaseNumber + 1 ? transformedPhase : phase
+          phase.phaseNumber === newPhaseNumber ? transformedPhase : phase
         );
 
-        // Always generate next phase placeholder - the journey never ends
+        // Generate next placeholder only if it doesn't exist
         if (shouldGenerateNextPhase()) {
-          const nextPhaseNumber = selectedPhaseNumber + 2;
-          updatedPhases.push(generatePhaseTemplate(nextPhaseNumber));
+          const maxPhaseNumber = Math.max(...updatedPhases.map(p => p.phaseNumber));
+          const nextPlaceholderNumber = maxPhaseNumber + 1;
+
+          // Only add if placeholder doesn't already exist
+          if (!updatedPhases.find(p => p.phaseNumber === nextPlaceholderNumber)) {
+            updatedPhases.push(generatePhaseTemplate(nextPlaceholderNumber));
+          }
         }
 
         const updatedRoadmap = {
@@ -193,7 +203,7 @@ export default function RoadmapTimelineHorizontal({ roadmap: initialRoadmap }: R
           <div className="absolute top-4 left-4 right-4 h-0.5 bg-slate-800" />
           {milestones.map((m) => {
             const isSelected = m.id === selectedId;
-            const color = STATUS_COLOR[m.status];
+            const color = STATUS_COLOR[m.status] || STATUS_COLOR["goal"];
             return (
               <button
                 key={m.id}
@@ -209,7 +219,7 @@ export default function RoadmapTimelineHorizontal({ roadmap: initialRoadmap }: R
                 <span className={`text-xs font-medium text-center leading-tight ${isSelected ? "text-white" : "text-slate-400"}`}>
                   {m.title}
                 </span>
-                <span className={`text-[11px] ${color.text}`}>{STATUS_LABEL[m.status]}</span>
+                <span className={`text-[11px] ${color.text}`}>{STATUS_LABEL[m.status] || "Unknown"}</span>
               </button>
             );
           })}
@@ -221,8 +231,8 @@ export default function RoadmapTimelineHorizontal({ roadmap: initialRoadmap }: R
         <div className="bg-slate-900 border border-slate-800 rounded-xl p-5">
           <div className="flex items-center justify-between mb-2">
             <h2 className="text-white font-medium text-base">{selected.title}</h2>
-            <span className={`text-xs px-2.5 py-1 rounded-full bg-slate-800 ${STATUS_COLOR[selected.status].text}`}>
-              {STATUS_LABEL[selected.status]}
+            <span className={`text-xs px-2.5 py-1 rounded-full bg-slate-800 ${(STATUS_COLOR[selected.status] || STATUS_COLOR["goal"]).text}`}>
+              {STATUS_LABEL[selected.status] || "Unknown"}
             </span>
           </div>
 
@@ -242,23 +252,30 @@ export default function RoadmapTimelineHorizontal({ roadmap: initialRoadmap }: R
           {selected.help.steps.length === 0 ? (
             <p className="text-slate-500 text-sm">No tasks to check off here.</p>
           ) : (
-            <ul className="space-y-3 mb-4">
-              {selected.help.steps.map((step) => (
-                <li key={step.id}>
-                  <label className="flex items-center gap-3 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={completedSteps[step.id] || false}
-                      onChange={() => toggleStep(step.id)}
-                      className="w-4 h-4 rounded accent-sky-400"
-                    />
-                    <span className={`text-sm ${step.done ? "text-slate-500 line-through" : "text-slate-200"}`}>
-                      {step.label}
-                    </span>
-                  </label>
-                </li>
-              ))}
-            </ul>
+            <>
+              <p className="text-xs uppercase tracking-wide text-slate-500 mb-3">Steps</p>
+              <ul className="space-y-3 mb-4">
+                {selected.help.steps.map((step, idx) => {
+                  const stepId = `${selected.id}-step-${idx}`;
+                  const stepText = typeof step === 'string' ? step : step.label || step;
+                  return (
+                    <li key={stepId}>
+                      <label className="flex items-center gap-3 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={completedSteps[stepId] || false}
+                          onChange={() => toggleStep(stepId)}
+                          className="w-4 h-4 rounded accent-sky-400"
+                        />
+                        <span className={`text-sm ${completedSteps[stepId] ? "text-slate-500 line-through" : "text-slate-200"}`}>
+                          {stepText}
+                        </span>
+                      </label>
+                    </li>
+                  );
+                })}
+              </ul>
+            </>
           )}
 
           {selected.help.resources.length > 0 && (

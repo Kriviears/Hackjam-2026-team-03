@@ -9,6 +9,11 @@ const milestoneSchema = new mongoose.Schema(
     description: String,
     category: String,
     done: { type: Boolean, default: false },
+    status: {
+      type: String,
+      enum: ["pending", "in-progress", "completed"],
+      default: "pending",
+    },
     type: { type: String, enum: ["task", "checkpoint"] },
     help: {
       context: String,
