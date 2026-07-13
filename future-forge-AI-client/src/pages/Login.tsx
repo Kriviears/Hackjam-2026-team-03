@@ -48,7 +48,7 @@ export default function Login() {
       <div className="mx-auto max-w-sm px-4">
         <div className="bg-softblack border border-bordergray rounded-xl shadow-md p-6 mx-auto">
           <div className="text-center mb-6">
-            <h1 className="text-2xl font-semibold text-offwhite">Welcome Back</h1>
+            <h1 className="text-2xl font-semibold text-offwhite">Welcome</h1>
             <p className="text-silver">Login to continue your journey</p>
           </div>
 

@@ -4,8 +4,8 @@ import type { Roadmap } from "../../types/types";
 export default function RoadmapSummary({ roadmap,  onBack }: { roadmap: Roadmap; onBack?: () => void  }) {
   const { targetRole, readinessSnapshot, topGaps } = roadmap;
 
-  return (
-    <div className="max-w-2xl mx-auto p-8 bg-softblack border border-bordergray rounded-2xl">
+  return (<div>
+    {/* <div className="max-w-2xl mx-auto p-8 bg-softblack border border-bordergray rounded-2xl"> */}
       <p className="text-royalblue text-xs font-semibold mb-2">Your readiness snapshot</p>
       <h1 className="text-2xl font-semibold text-offwhite mb-6">{targetRole}</h1>
 

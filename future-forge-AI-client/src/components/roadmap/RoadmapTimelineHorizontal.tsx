@@ -132,7 +132,7 @@ export default function RoadmapTimelineHorizontal({ roadmap: initialRoadmap }: R
   }
 
   return (
-    <div className="w-full max-w-3xl mx-auto bg-slate-950 rounded-2xl p-6 sm:p-8">
+    <div className="w-full max-w-5xl mx-auto bg-slate-950 rounded-2xl p-6 sm:p-8">
       {/* Phase selector tabs */}
       <div className="flex gap-2 mb-8 border-b border-slate-800">
         {roadmap.phases.map((phase) => (
