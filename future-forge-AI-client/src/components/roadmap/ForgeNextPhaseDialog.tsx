@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-export function ForgeNextPhaseDialog({ open, currentPhase, existingChallenge, onSubmit }) {
+export function ForgeNextPhaseDialog({ open, currentPhase, currentMilestone, isJobLanding, existingChallenge, onSubmit }: any) {
   const [outcomeAnswer, setOutcomeAnswer] = useState("");
   const [challenge, setChallenge] = useState(existingChallenge);
   const [userName, setUserName] = useState("");
@@ -44,6 +44,12 @@ export function ForgeNextPhaseDialog({ open, currentPhase, existingChallenge, on
       </div>
 
       <div className="p-6 space-y-4">
+        {isJobLanding && (
+          <div className="bg-emerald-900/30 border border-emerald-500 rounded-lg p-4">
+            <p className="text-emerald-300 font-bold text-lg">🎊 Congratulations on landing your job!</p>
+            <p className="text-emerald-200 text-sm mt-1">This is a major milestone! You can still learn more courses. What's next?</p>
+          </div>
+        )}
         {userName && (
           <p className="text-sky-300 text-sm bg-slate-950 rounded p-2">
             Welcome back, <span className="font-semibold">{userName}</span>! 👋

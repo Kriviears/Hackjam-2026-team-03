@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { ForgeNextPhaseDialog } from "./ForgeNextPhaseDialog";
 import { getRoadMap } from "@/services/service";
 import { formatPhaseForDisplay } from "@/utils/formatPhaseForDisplay";
+import { generatePhaseTemplate, shouldGenerateNextPhase } from "@/utils/generatePhaseTemplate";
 
 interface RoadmapTimelineProps {
   roadmap: RoadmapData;
@@ -40,6 +41,13 @@ export default function RoadmapTimelineHorizontal({ roadmap: initialRoadmap }: R
       ...prev,
       [stepId]: !prev[stepId]  // example stepId - "m1-s1"
     }));
+  };
+
+  const isJobLandingMilestone = (milestone: Milestone) => {
+    const title = milestone.title.toLowerCase();
+    const description = milestone.description.toLowerCase();
+    return (title.includes("job") && title.includes("land")) ||
+           (description.includes("job") && description.includes("land"));
   };
 
   useEffect(() => {
@@ -88,12 +96,20 @@ export default function RoadmapTimelineHorizontal({ roadmap: initialRoadmap }: R
 
       // Update roadmap with new phase data
       if (transformedPhase) {
-        const updatedPhases = roadmap.phases.map(phase =>
+        const jobStatus = rec.jobStatus || "searching";
+        let updatedPhases = roadmap.phases.map(phase =>
           phase.phaseNumber === selectedPhaseNumber + 1 ? transformedPhase : phase
         );
 
+        // Always generate next phase placeholder - the journey never ends
+        if (shouldGenerateNextPhase()) {
+          const nextPhaseNumber = selectedPhaseNumber + 2;
+          updatedPhases.push(generatePhaseTemplate(nextPhaseNumber));
+        }
+
         const updatedRoadmap = {
           ...roadmap,
+          jobStatus: jobStatus,
           phases: updatedPhases
         };
 
@@ -265,12 +281,14 @@ export default function RoadmapTimelineHorizontal({ roadmap: initialRoadmap }: R
             <button onClick={() => setShowCelebration(true)} title="Generate your next phase based on this checkpoint"
               className="mt-4 w-full py-3 px-4 rounded-lg bg-gradient-to-r from-violet-600 to-violet-500 hover:from-violet-500 hover:to-violet-400 text-white font-medium transition"
             >
-              🎉 Celebrate Checkpoint
+              {isJobLandingMilestone(selected) ? "🎊 Celebrate Job Landing" : "🎉 Celebrate Checkpoint"}
             </button>
           )}
           <ForgeNextPhaseDialog
             open={showCelebration}
             currentPhase={selectedPhase}
+            currentMilestone={selected}
+            isJobLanding={selected && isJobLandingMilestone(selected)}
             existingChallenge=""
             onSubmit={(data:any) => handleNextPhase(data)}
           />

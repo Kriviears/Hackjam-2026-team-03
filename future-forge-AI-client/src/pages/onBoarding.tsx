@@ -5,6 +5,7 @@ import LearnerOnboarding from "../components/onboarding/LearnerOnboarding"
 import RoadmapSummary from "../components/roadmap/RoadmapSummary";
 import { getRoadMap } from "@/services/service";
 import { formatPhaseForDisplay } from "@/utils/formatPhaseForDisplay";
+import { generatePhaseTemplate, shouldGenerateNextPhase } from "@/utils/generatePhaseTemplate";
 import type { RoadmapData } from "@/types/types";
 function Onboarding(){
     const [userRole] = useState("current_learner");
@@ -50,16 +51,25 @@ function Onboarding(){
             const firstPhase = rec.phases?.[0] || rec.phase;
             const transformedPhase = formatPhaseForDisplay(firstPhase);
 
+            // Generate phases dynamically - the journey never ends
+            const jobStatus = rec.jobStatus || "searching";
+            const generatePhasePlaceholders = () => {
+              const placeholders = [transformedPhase];
+
+              if (shouldGenerateNextPhase() && transformedPhase) {
+                placeholders.push(generatePhaseTemplate(2));
+              }
+
+              return placeholders.filter(Boolean);
+            };
+
             const transformedRoadmap = {
               targetRole: rec.targetRole,
               goal: rec.goal,
               readinessSnapshot: rec.readinessSnapshot,
               topGaps: rec.topGaps,
-              phases: transformedPhase ? [
-                transformedPhase,
-                { phaseNumber: 2, title: "Convert to offers", status: "locked", oneLineDescription: "Unlocks after landing your first interview", milestones: [] },
-                { phaseNumber: 3, title: "Onboard and ramp", status: "locked", oneLineDescription: "Unlocks after accepting an offer", milestones: [] },
-              ] : [],
+              jobStatus: jobStatus,
+              phases: generatePhasePlaceholders(),
             };
             setRoadmap(transformedRoadmap);
             setStatus("summary");

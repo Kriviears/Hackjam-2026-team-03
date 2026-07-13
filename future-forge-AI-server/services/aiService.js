@@ -33,12 +33,14 @@ if (!textBlock?.text) {
   throw new Error("No text content in API response");
 }
 
-const cleaned = textBlock.text
-  .replace(/```json/g, "")
-  .replace(/```/g, "")
-  .trim();
+// Find the JSON object regardless of any preamble/fences around it
+const jsonMatch = textBlock.text.match(/\{[\s\S]*\}/);
+if (!jsonMatch) {
+  throw new Error("No JSON object found in response: " + textBlock.text.slice(0, 200));
+}
 
-return JSON.parse(cleaned);
+const parsed = JSON.parse(jsonMatch[0]);
+return parsed;
 };
 
 module.exports = {
